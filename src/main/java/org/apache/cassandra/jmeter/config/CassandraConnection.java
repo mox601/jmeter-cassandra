@@ -15,8 +15,14 @@ package org.apache.cassandra.jmeter.config;
  * limitations under the License.
  */
 
-import com.datastax.driver.core.Session;
-import com.datastax.driver.core.policies.*;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.jmeter.config.ConfigElement;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.testbeans.TestBeanHelper;
@@ -27,10 +33,12 @@ import org.apache.jmeter.threads.JMeterVariables;
 import org.apache.jorphan.logging.LoggingManager;
 import org.apache.log.Logger;
 
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
-import java.util.*;
+import com.datastax.driver.core.Session;
+import com.datastax.driver.core.policies.DCAwareRoundRobinPolicy;
+import com.datastax.driver.core.policies.LoadBalancingPolicy;
+import com.datastax.driver.core.policies.RoundRobinPolicy;
+import com.datastax.driver.core.policies.TokenAwarePolicy;
+import com.datastax.driver.core.policies.WhiteListPolicy;
 
 public class CassandraConnection extends AbstractTestElement
     implements ConfigElement, TestStateListener, TestBean
@@ -156,7 +164,10 @@ public class CassandraConnection extends AbstractTestElement
         for (String contactPt : contactPoints.split(",")) {
             this.contactPointsI.add(InetAddress.getByName(contactPt));
             // TODO - 9160 should not really be hard coded.
-            this.contactPointsIS.add(new InetSocketAddress(contactPt, 9042));
+            final String[] hostPort = contactPt.split(":");
+            final String host = hostPort[0];
+            final int port = Integer.parseInt(hostPort[1]);
+            this.contactPointsIS.add(new InetSocketAddress(host, port));
         }
     }
 
