@@ -166,7 +166,7 @@ public class CassandraConnection extends AbstractTestElement
             // TODO - 9160 should not really be hard coded.
             final String[] hostPort = contactPt.split(":");
             final String host = hostPort[0];
-            int port = 9043;
+            int port = 9042;
             try {
                 port = Integer.parseInt(hostPort[1]);
             } catch (Exception e) {
