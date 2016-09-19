@@ -1,0 +1,5 @@
+.idea
+*.iml
+**/target
+**/result-logs
+**/nb-configuration.xml
