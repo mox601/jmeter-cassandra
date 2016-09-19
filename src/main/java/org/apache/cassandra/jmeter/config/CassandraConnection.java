@@ -15,7 +15,6 @@ package org.apache.cassandra.jmeter.config;
  * limitations under the License.
  */
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -57,7 +56,7 @@ public class CassandraConnection extends AbstractTestElement
 
     private transient String contactPoints, keyspace, username, password, sessionName, loadBalancer, localDataCenter;
 
-    private final transient Set<InetAddress> contactPointsI = new HashSet<InetAddress>();
+//    private final transient Set<InetAddress> contactPointsI = new HashSet<InetAddress>();
     private final transient Set<InetSocketAddress> contactPointsIS = new HashSet<InetSocketAddress>();
 
     // TODO - Add Port Number
@@ -106,7 +105,7 @@ public class CassandraConnection extends AbstractTestElement
             loadBalancingPolicy = null;
         }
 
-        Session session = CassandraSessionFactory.createSession(sessionName, contactPointsI, keyspace, username, password, loadBalancingPolicy);
+        Session session = CassandraSessionFactory.createSession(sessionName, contactPointsIS, keyspace, username, password, loadBalancingPolicy);
 
         variables.putObject(sessionName, session);
     }
@@ -165,13 +164,14 @@ public class CassandraConnection extends AbstractTestElement
             // TODO - 9160 should not really be hard coded.
             final String[] hostPort = contactPt.split(":");
             final String host = hostPort[0];
-            this.contactPointsI.add(InetAddress.getByName(host));
             int port = 9042;
             try {
                 port = Integer.parseInt(hostPort[1]);
             } catch (Exception e) {
                 //uses the default
             }
+
+//            this.contactPointsI.add(InetAddress.getByName(host));
             InetSocketAddress e = new InetSocketAddress(host, port);
             this.contactPointsIS.add(e);
         }

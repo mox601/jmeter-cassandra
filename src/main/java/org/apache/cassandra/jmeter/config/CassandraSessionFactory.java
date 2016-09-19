@@ -16,17 +16,15 @@ package org.apache.cassandra.jmeter.config;
  * limitations under the License.
  */
 
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.QueryOptions;
-import com.datastax.driver.core.Session;
-import com.datastax.driver.core.SocketOptions;
-import com.datastax.driver.core.policies.ConstantReconnectionPolicy;
-import com.datastax.driver.core.policies.LoadBalancingPolicy;
-
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.Session;
+import com.datastax.driver.core.policies.ConstantReconnectionPolicy;
+import com.datastax.driver.core.policies.LoadBalancingPolicy;
 
 public class CassandraSessionFactory {
 
@@ -53,14 +51,15 @@ public class CassandraSessionFactory {
     return instance;
   }
 
-  public static synchronized Session createSession(String sessionKey, Set<InetAddress> host, String keyspace, String username, String password, LoadBalancingPolicy loadBalancingPolicy) {
+  public static synchronized Session createSession(String sessionKey, Set<InetSocketAddress> host, String keyspace, String username, String password, LoadBalancingPolicy loadBalancingPolicy) {
 
     instance = getInstance();
     Session session = instance.sessions.get(sessionKey);
       if (session == null) {
 
           Cluster.Builder cb = Cluster.builder()
-                  .addContactPoints(host)
+//                  .addContactPoints(host)
+                  .addContactPointsWithPorts(host)
                   .withReconnectionPolicy(new ConstantReconnectionPolicy(10000)) ;
 
           if (loadBalancingPolicy != null ) {
