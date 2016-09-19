@@ -162,10 +162,10 @@ public class CassandraConnection extends AbstractTestElement
     public void setContactPoints(String contactPoints) throws UnknownHostException {
         this.contactPoints = contactPoints;
         for (String contactPt : contactPoints.split(",")) {
-            this.contactPointsI.add(InetAddress.getByName(contactPt));
             // TODO - 9160 should not really be hard coded.
             final String[] hostPort = contactPt.split(":");
             final String host = hostPort[0];
+            this.contactPointsI.add(InetAddress.getByName(host));
             int port = 9042;
             try {
                 port = Integer.parseInt(hostPort[1]);
