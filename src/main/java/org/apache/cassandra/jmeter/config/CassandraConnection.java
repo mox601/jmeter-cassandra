@@ -172,10 +172,7 @@ public class CassandraConnection extends AbstractTestElement
             } catch (Exception e) {
                 //uses the default
             }
-            System.out.println(host);
-            System.out.println(port);
             InetSocketAddress e = new InetSocketAddress(host, port);
-            System.out.println(e.toString());
             this.contactPointsIS.add(e);
         }
     }
