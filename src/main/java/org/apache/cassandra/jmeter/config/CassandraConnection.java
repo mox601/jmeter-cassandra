@@ -56,8 +56,7 @@ public class CassandraConnection extends AbstractTestElement
 
     private transient String contactPoints, keyspace, username, password, sessionName, loadBalancer, localDataCenter;
 
-//    private final transient Set<InetAddress> contactPointsI = new HashSet<InetAddress>();
-    private final transient Set<InetSocketAddress> contactPointsIS = new HashSet<InetSocketAddress>();
+    private final transient Set<InetSocketAddress> contactPointsIS = new HashSet<>();
 
     // TODO - Add Port Number
 
@@ -161,7 +160,6 @@ public class CassandraConnection extends AbstractTestElement
     public void setContactPoints(String contactPoints) throws UnknownHostException {
         this.contactPoints = contactPoints;
         for (String contactPt : contactPoints.split(",")) {
-            // TODO - 9160 should not really be hard coded.
             final String[] hostPort = contactPt.split(":");
             final String host = hostPort[0];
             int port = 9042;
@@ -170,9 +168,7 @@ public class CassandraConnection extends AbstractTestElement
             } catch (Exception e) {
                 //uses the default
             }
-
-//            this.contactPointsI.add(InetAddress.getByName(host));
-            InetSocketAddress e = new InetSocketAddress(host, port);
+            final InetSocketAddress e = new InetSocketAddress(host, port);
             this.contactPointsIS.add(e);
         }
     }

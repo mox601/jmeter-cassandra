@@ -58,7 +58,6 @@ public class CassandraSessionFactory {
       if (session == null) {
 
           Cluster.Builder cb = Cluster.builder()
-//                  .addContactPoints(host)
                   .addContactPointsWithPorts(host)
                   .withReconnectionPolicy(new ConstantReconnectionPolicy(10000)) ;
 
